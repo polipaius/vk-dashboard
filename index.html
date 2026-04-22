@@ -4,144 +4,321 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vibrant Kundalini — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --color-reseda:       #6E765B;
-      --color-moss:         #959E79;
-      --color-sage:         #B8B99C;
-      --color-floral-white: #FFFBF4;
-      --color-alabaster:    #ECE4D8;
-      --color-khaki:        #BBA58F;
-      --color-text:         #474747;
-      --color-white:        #FFFFFF;
-      --color-border:       #DDDDDD;
-      --font-serif:   'Playfair Display', Georgia, serif;
-      --font-sans:    'Lato', Arial, sans-serif;
-      --radius-card:   12px;
-      --shadow:        0 2px 12px rgba(110,118,91,0.10);
+      --bg:             #EDE8DF;
+      --bg-alt:         #E6E0D6;
+      --shadow-light:   rgba(255,255,255,0.85);
+      --shadow-dark:    rgba(180,165,145,0.55);
+      --reseda:         #6E765B;
+      --moss:           #959E79;
+      --sage:           #B0B494;
+      --khaki:          #BBA58F;
+      --alabaster:      #ECE4D8;
+      --text:           #3D3D35;
+      --text-muted:     #8A8878;
+      --white:          #FFFFFF;
+      --green:          #6A9B6A;
+      --red:            #C47272;
+      --font-serif:     'Playfair Display', Georgia, serif;
+      --font-sans:      'Lato', Arial, sans-serif;
+      --radius:         18px;
+      --radius-sm:      10px;
+      --neu-out:        6px 6px 14px var(--shadow-dark), -6px -6px 14px var(--shadow-light);
+      --neu-in:         inset 3px 3px 8px var(--shadow-dark), inset -3px -3px 8px var(--shadow-light);
+      --neu-card:       8px 8px 20px var(--shadow-dark), -8px -8px 20px var(--shadow-light);
+      --transition:     all 0.22s cubic-bezier(.4,0,.2,1);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: var(--font-sans);
-      color: var(--color-text);
-      background: linear-gradient(160deg, var(--color-floral-white) 70%, var(--color-alabaster));
+      color: var(--text);
+      background: var(--bg);
       min-height: 100vh;
-      padding: 0 0 60px;
+      padding-bottom: 80px;
     }
-    header {
-      background: var(--color-reseda);
-      color: var(--color-white);
-      padding: 24px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header h1 { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 400; letter-spacing: 0.02em; }
-    header .subtitle { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
-    #last-updated { font-size: 0.78rem; opacity: 0.7; text-align: right; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 36px 24px 0; }
-    .section-title {
-      font-family: var(--font-serif);
-      font-size: 1.2rem;
-      color: var(--color-reseda);
-      margin: 36px 0 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--color-border);
-    }
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-    .kpi-card {
-      background: var(--color-white);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow);
-      padding: 20px 22px;
-      border-left: 4px solid var(--color-reseda);
-    }
-    .kpi-card .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-sage); margin-bottom: 6px; }
-    .kpi-card .value { font-family: var(--font-serif); font-size: 2rem; color: var(--color-reseda); line-height: 1; }
-    .kpi-card .sub { font-size: 0.78rem; color: var(--color-khaki); margin-top: 4px; }
-    .kpi-card.accent { border-left-color: var(--color-khaki); }
-    .kpi-card.accent .value { color: var(--color-khaki); }
-    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .chart-card { background: var(--color-white); border-radius: var(--radius-card); box-shadow: var(--shadow); padding: 22px 24px; }
-    .chart-card h3 { font-family: var(--font-serif); font-size: 1rem; color: var(--color-reseda); margin-bottom: 16px; font-weight: 400; }
-    .chart-wrap { position: relative; height: 260px; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-    th { text-align: left; padding: 8px 12px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-sage); border-bottom: 2px solid var(--color-alabaster); }
-    td { padding: 10px 12px; border-bottom: 1px solid var(--color-alabaster); color: var(--color-text); }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: var(--color-floral-white); }
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
-    .badge-green { background: #e8f5e9; color: #388e3c; }
-    .badge-red   { background: #ffebee; color: #c62828; }
-    .ads-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .ads-card { background: var(--color-alabaster); border-radius: 10px; padding: 14px 16px; text-align: center; }
-    .ads-card .ads-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-sage); }
-    .ads-card .ads-value { font-family: var(--font-serif); font-size: 1.6rem; color: var(--color-reseda); margin-top: 4px; }
-    .segmenti-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
-    .segmento-item { background: var(--color-alabaster); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
-    .segmento-item .seg-count { font-weight: 700; color: var(--color-reseda); font-family: var(--font-serif); font-size: 1.1rem; }
-    .eventi-list { display: flex; flex-direction: column; gap: 10px; }
-    .evento-item { background: var(--color-white); border-radius: 8px; box-shadow: var(--shadow); padding: 14px 18px; display: flex; align-items: center; gap: 16px; }
-    .evento-data { background: var(--color-reseda); color: white; border-radius: 8px; padding: 6px 12px; text-align: center; min-width: 62px; font-size: 0.78rem; line-height: 1.4; }
-    .evento-data strong { display: block; font-size: 1.3rem; }
-    .evento-info h4 { font-size: 0.92rem; margin-bottom: 2px; }
-    .evento-info small { font-size: 0.76rem; color: var(--color-sage); }
-    .cat-badge { margin-left: auto; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; background: var(--color-alabaster); color: var(--color-reseda); }
-    .goal-bar-wrap { background: var(--color-alabaster); border-radius: var(--radius-card); padding: 20px 24px; margin-bottom: 8px; }
-    .goal-bar-label { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 8px; color: var(--color-text); }
-    .goal-bar-track { background: var(--color-border); border-radius: 20px; height: 14px; overflow: hidden; }
-    .goal-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--color-reseda), var(--color-moss)); transition: width 1s ease; }
-    /* Login overlay */
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--sage); border-radius: 10px; }
+
+    /* ── LOGIN ── */
     #login-overlay {
       position: fixed; inset: 0;
-      background: linear-gradient(160deg, var(--color-floral-white) 70%, var(--color-alabaster));
+      background: var(--bg);
       display: flex; align-items: center; justify-content: center;
       z-index: 1000;
     }
     .login-box {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 40px rgba(110,118,91,0.15);
-      padding: 40px 48px;
+      box-shadow: var(--neu-card);
+      border-radius: 24px;
+      padding: 52px 56px;
       text-align: center;
-      min-width: 320px;
+      min-width: 340px;
+      background: var(--bg);
+      animation: floatIn .5s ease both;
     }
-    .login-box h2 { font-family: var(--font-serif); color: var(--color-reseda); font-size: 1.6rem; margin-bottom: 6px; }
-    .login-box p { font-size: 0.85rem; color: var(--color-sage); margin-bottom: 24px; }
+    @keyframes floatIn {
+      from { opacity:0; transform: translateY(20px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+    .login-logo {
+      font-size: 2.8rem;
+      color: var(--reseda);
+      margin-bottom: 4px;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.7; transform:scale(1.08); }
+    }
+    .login-box h2 {
+      font-family: var(--font-serif);
+      color: var(--reseda);
+      font-size: 1.7rem;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .login-box p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 28px; }
     .login-box input {
-      width: 100%; padding: 12px 16px;
-      border: 1.5px solid var(--color-border);
-      border-radius: 8px;
-      font-family: var(--font-sans);
-      font-size: 1rem;
-      color: var(--color-text);
-      margin-bottom: 14px;
-      outline: none;
-      transition: border-color 0.2s;
+      width: 100%; padding: 14px 18px;
+      border: none; outline: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans); font-size: 1rem;
+      color: var(--text);
+      background: var(--bg);
+      box-shadow: var(--neu-in);
+      margin-bottom: 18px;
+      transition: var(--transition);
     }
-    .login-box input:focus { border-color: var(--color-reseda); }
+    .login-box input:focus { box-shadow: var(--neu-in), 0 0 0 2px var(--moss); }
     .login-box button {
-      width: 100%; padding: 12px;
-      background: var(--color-reseda);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-family: var(--font-sans);
-      font-size: 1rem;
+      width: 100%; padding: 14px;
+      border: none; cursor: pointer;
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      box-shadow: var(--neu-out);
+      font-family: var(--font-sans); font-size: 0.9rem;
+      font-weight: 700; letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      transition: background 0.2s;
+      color: var(--reseda);
+      transition: var(--transition);
     }
-    .login-box button:hover { background: var(--color-moss); }
-    .login-error { color: #c62828; font-size: 0.82rem; margin-top: 10px; display: none; }
+    .login-box button:hover  { box-shadow: 4px 4px 10px var(--shadow-dark), -4px -4px 10px var(--shadow-light); }
+    .login-box button:active { box-shadow: var(--neu-in); }
+    .login-error { color: var(--red); font-size: 0.82rem; margin-top: 12px; display: none; }
+
+    /* ── HEADER ── */
     #main-content { display: none; }
+    header {
+      background: linear-gradient(135deg, #5E6649 0%, #7A8462 60%, #9AA07C 100%);
+      padding: 28px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(80,85,60,0.25);
+    }
+    .header-left { display: flex; align-items: center; gap: 16px; }
+    .header-icon {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      backdrop-filter: blur(4px);
+    }
+    header h1 {
+      font-family: var(--font-serif);
+      font-size: 1.7rem; font-weight: 400;
+      color: #fff;
+      letter-spacing: 0.02em;
+    }
+    header .subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-top: 2px; }
+    #last-updated { font-size: 0.76rem; color: rgba(255,255,255,0.55); text-align: right; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1240px; margin: 0 auto; padding: 44px 28px 0; }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem; font-weight: 400;
+      color: var(--reseda);
+      margin: 44px 0 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--sage), transparent);
+    }
+
+    /* ── GOAL BAR ── */
+    .goal-wrap {
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: var(--neu-card);
+      padding: 28px 32px;
+    }
+    .goal-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+    .goal-header .g-label { font-family: var(--font-serif); font-size: 1.05rem; color: var(--text); }
+    .goal-header .g-pct  { font-size: 0.85rem; color: var(--reseda); font-weight: 700; }
+    .goal-track {
+      border-radius: 20px; height: 16px;
+      box-shadow: var(--neu-in);
+      overflow: hidden;
+    }
+    .goal-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, var(--reseda), var(--moss));
+      width: 0%;
+      transition: width 1.2s cubic-bezier(.34,1.56,.64,1);
+    }
+    .goal-sub { margin-top: 10px; font-size: 0.76rem; color: var(--text-muted); }
+
+    /* ── KPI CARDS ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 20px;
+    }
+    .kpi-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: var(--neu-card);
+      padding: 24px 26px;
+      cursor: default;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--reseda);
+      border-radius: 18px 0 0 18px;
+      transition: var(--transition);
+    }
+    .kpi-card.accent::before  { background: var(--khaki); }
+    .kpi-card:hover { transform: translateY(-3px); box-shadow: 10px 10px 24px var(--shadow-dark), -10px -10px 24px var(--shadow-light); }
+    .kpi-card .k-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 8px; }
+    .kpi-card .k-value {
+      font-family: var(--font-serif);
+      font-size: 2.2rem; line-height: 1;
+      color: var(--reseda);
+      transition: var(--transition);
+    }
+    .kpi-card.accent .k-value { color: var(--khaki); }
+    .kpi-card .k-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+
+    /* ── CHART CARDS ── */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .chart-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: var(--neu-card);
+      padding: 26px 28px;
+    }
+    .chart-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1rem; font-weight: 400;
+      color: var(--reseda);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(110,118,91,0.15);
+    }
+    .chart-wrap { position: relative; height: 270px; }
+
+    /* ── TABLE ── */
+    table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+    th {
+      text-align: left; padding: 10px 14px;
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(110,118,91,0.2);
+    }
+    td { padding: 12px 14px; border-bottom: 1px solid rgba(110,118,91,0.08); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(110,118,91,0.04); border-radius: 8px; }
+    .badge {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 20px; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .badge-green { background: rgba(106,155,106,0.15); color: var(--green); }
+    .badge-red   { background: rgba(196,114,114,0.15); color: var(--red); }
+
+    /* ── ADS ── */
+    .ads-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px,1fr)); gap: 14px; margin-bottom: 22px; }
+    .ads-card {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--neu-out);
+      padding: 16px 18px; text-align: center;
+      transition: var(--transition);
+    }
+    .ads-card:hover { transform: translateY(-2px); }
+    .ads-card .a-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); }
+    .ads-card .a-value { font-family: var(--font-serif); font-size: 1.65rem; color: var(--reseda); margin-top: 6px; }
+
+    /* ── SEGMENTI ── */
+    .segmenti-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+    .seg-item {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      box-shadow: 3px 3px 8px var(--shadow-dark), -3px -3px 8px var(--shadow-light);
+      padding: 10px 13px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem;
+    }
+    .seg-count { font-family: var(--font-serif); font-size: 1.1rem; color: var(--reseda); font-weight: 700; }
+
+    /* ── EVENTI ── */
+    .eventi-list { display: flex; flex-direction: column; gap: 12px; }
+    .evento-item {
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: var(--neu-out);
+      padding: 16px 22px;
+      display: flex; align-items: center; gap: 18px;
+      transition: var(--transition);
+    }
+    .evento-item:hover { transform: translateX(4px); }
+    .evento-data {
+      background: linear-gradient(135deg, var(--reseda), var(--moss));
+      color: #fff;
+      border-radius: 12px;
+      padding: 8px 14px; text-align: center;
+      min-width: 60px; font-size: 0.75rem; line-height: 1.5;
+      box-shadow: 3px 3px 8px var(--shadow-dark);
+    }
+    .evento-data strong { display: block; font-size: 1.4rem; line-height: 1; }
+    .evento-info h4 { font-size: 0.92rem; margin-bottom: 2px; }
+    .evento-info small { font-size: 0.75rem; color: var(--text-muted); }
+    .cat-badge {
+      margin-left: auto;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--bg);
+      box-shadow: 2px 2px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
+      color: var(--reseda);
+    }
+
+    /* ── COUNTER ANIMATION ── */
+    .counting { transition: none; }
+
     @media (max-width: 768px) {
-      header { padding: 18px 20px; }
-      .container { padding: 20px 16px 0; }
+      header { padding: 20px 22px; }
+      .container { padding: 24px 16px 0; }
       .charts-grid { grid-template-columns: 1fr; }
+      .login-box { padding: 36px 28px; min-width: unset; width: 90vw; }
+      .segmenti-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -150,8 +327,9 @@
 <!-- LOGIN -->
 <div id="login-overlay">
   <div class="login-box">
+    <div class="login-logo">✿</div>
     <h2>Vibrant Kundalini</h2>
-    <p>Inserisci la password per accedere alla dashboard</p>
+    <p>Inserisci la password per accedere</p>
     <input type="password" id="pwd-input" placeholder="Password" />
     <button onclick="doLogin()">Accedi</button>
     <div class="login-error" id="login-error">Password errata. Riprova.</div>
@@ -160,45 +338,53 @@
 
 <!-- DASHBOARD -->
 <div id="main-content">
+
 <header>
-  <div>
-    <h1>Vibrant Kundalini</h1>
-    <div class="subtitle">Dashboard — Contadini dell'Anima</div>
+  <div class="header-left">
+    <div class="header-icon">✿</div>
+    <div>
+      <h1>Vibrant Kundalini</h1>
+      <div class="subtitle">Contadini dell’Anima — Dashboard</div>
+    </div>
   </div>
-  <div id="last-updated">Caricamento...</div>
+  <div id="last-updated">Caricamento…</div>
 </header>
 
 <div class="container">
 
-  <h2 class="section-title">Obiettivo Mensile</h2>
-  <div class="goal-bar-wrap">
-    <div class="goal-bar-label">
-      <span id="goal-label">—</span>
-      <span id="goal-pct">—</span>
+  <!-- OBIETTIVO -->
+  <h2 class="section-title">🎯 Obiettivo Mensile</h2>
+  <div class="goal-wrap">
+    <div class="goal-header">
+      <span class="g-label" id="goal-label">—</span>
+      <span class="g-pct" id="goal-pct">—</span>
     </div>
-    <div class="goal-bar-track"><div class="goal-bar-fill" id="goal-fill" style="width:0%"></div></div>
-    <div style="margin-top:8px;font-size:0.78rem;color:var(--color-sage);">Obiettivo: €5.000/mese</div>
+    <div class="goal-track"><div class="goal-fill" id="goal-fill"></div></div>
+    <div class="goal-sub">Obiettivo: €5.000 / mese</div>
   </div>
 
-  <h2 class="section-title">KPI Principali</h2>
+  <!-- KPI -->
+  <h2 class="section-title">✨ KPI Principali</h2>
   <div class="kpi-grid">
-    <div class="kpi-card"><div class="label">Fatturato Mese Corrente</div><div class="value" id="k-fatturato">—</div><div class="sub" id="k-fatturato-mese"></div></div>
-    <div class="kpi-card accent"><div class="label">Fatturato Totale</div><div class="value" id="k-totale">—</div><div class="sub">dall'inizio</div></div>
-    <div class="kpi-card"><div class="label">Clienti Attivi</div><div class="value" id="k-attivi">—</div><div class="sub">ultimi 12 mesi</div></div>
-    <div class="kpi-card accent"><div class="label">Membership Attive</div><div class="value" id="k-membership">—</div><div class="sub">wcm-active</div></div>
-    <div class="kpi-card"><div class="label">Iscritti Email</div><div class="value" id="k-email">—</div><div class="sub">totale Flodesk</div></div>
-    <div class="kpi-card accent"><div class="label">LTV Medio</div><div class="value" id="k-ltv">—</div><div class="sub">per cliente</div></div>
-    <div class="kpi-card"><div class="label">AOV</div><div class="value" id="k-aov">—</div><div class="sub">valore ordine medio</div></div>
-    <div class="kpi-card accent"><div class="label">Clienti Totali</div><div class="value" id="k-clienti">—</div><div class="sub">da sempre</div></div>
+    <div class="kpi-card"><div class="k-label">Fatturato Mese</div><div class="k-value" id="k-fatturato" data-val="0" data-prefix="€">—</div><div class="k-sub" id="k-fatturato-mese"></div></div>
+    <div class="kpi-card accent"><div class="k-label">Fatturato Totale</div><div class="k-value" id="k-totale" data-val="0" data-prefix="€">—</div><div class="k-sub">dall’inizio</div></div>
+    <div class="kpi-card"><div class="k-label">Clienti Attivi</div><div class="k-value" id="k-attivi" data-val="0">—</div><div class="k-sub">ultimi 12 mesi</div></div>
+    <div class="kpi-card accent"><div class="k-label">Membership Attive</div><div class="k-value" id="k-membership" data-val="0">—</div><div class="k-sub">wcm-active</div></div>
+    <div class="kpi-card"><div class="k-label">Iscritti Email</div><div class="k-value" id="k-email" data-val="0">—</div><div class="k-sub">totale Flodesk</div></div>
+    <div class="kpi-card accent"><div class="k-label">LTV Medio</div><div class="k-value" id="k-ltv" data-val="0" data-prefix="€">—</div><div class="k-sub">per cliente</div></div>
+    <div class="kpi-card"><div class="k-label">AOV</div><div class="k-value" id="k-aov" data-val="0" data-prefix="€">—</div><div class="k-sub">valore ordine medio</div></div>
+    <div class="kpi-card accent"><div class="k-label">Clienti Totali</div><div class="k-value" id="k-clienti" data-val="0">—</div><div class="k-sub">da sempre</div></div>
   </div>
 
-  <h2 class="section-title">Fatturato Mensile</h2>
+  <!-- FATTURATO -->
+  <h2 class="section-title">📈 Fatturato Mensile</h2>
   <div class="chart-card">
-    <h3>Andamento fatturato (€) — Apr 2025 → oggi</h3>
+    <h3>Andamento (€) — Apr 2025 → oggi</h3>
     <div class="chart-wrap"><canvas id="chartFatturato"></canvas></div>
   </div>
 
-  <h2 class="section-title">Prodotti &amp; Budget</h2>
+  <!-- PRODOTTI + BUDGET -->
+  <h2 class="section-title">📦 Prodotti &amp; Budget</h2>
   <div class="charts-grid">
     <div class="chart-card">
       <h3>Top Prodotti — Fatturato (€)</h3>
@@ -210,7 +396,8 @@
     </div>
   </div>
 
-  <h2 class="section-title">Netto Mensile</h2>
+  <!-- NETTO TABLE -->
+  <h2 class="section-title">💳 Netto Mensile</h2>
   <div class="chart-card">
     <table id="table-netto">
       <thead><tr><th>Mese</th><th>Entrate</th><th>Uscite</th><th>Netto</th><th>Stato</th></tr></thead>
@@ -218,11 +405,12 @@
     </table>
   </div>
 
-  <h2 class="section-title">Meta Ads — Ultimi 30 Giorni</h2>
+  <!-- META ADS -->
+  <h2 class="section-title">🎯 Meta Ads — Ultimi 30 Giorni</h2>
   <div class="ads-grid" id="ads-grid"></div>
   <div class="charts-grid">
     <div class="chart-card">
-      <h3>Spesa Ads per Mese (€)</h3>
+      <h3>Spesa per Mese (€)</h3>
       <div class="chart-wrap"><canvas id="chartAdsSpesa"></canvas></div>
     </div>
     <div class="chart-card">
@@ -231,7 +419,8 @@
     </div>
   </div>
 
-  <h2 class="section-title">Email — Flodesk</h2>
+  <!-- FLODESK -->
+  <h2 class="section-title">📧 Email — Flodesk</h2>
   <div class="charts-grid">
     <div class="chart-card">
       <h3>Top 8 Segmenti</h3>
@@ -239,14 +428,16 @@
     </div>
     <div class="chart-card">
       <h3>Tutti i Segmenti</h3>
-      <div class="segmenti-grid" id="segmenti-grid" style="margin-top:4px;"></div>
+      <div class="segmenti-grid" id="segmenti-grid"></div>
     </div>
   </div>
 
-  <h2 class="section-title">Prossimi Eventi</h2>
+  <!-- EVENTI -->
+  <h2 class="section-title">📅 Prossimi Eventi</h2>
   <div class="eventi-list" id="eventi-list"></div>
 
-  <h2 class="section-title">Distribuzione Ordini per Cliente</h2>
+  <!-- DISTRIBUZIONE ORDINI -->
+  <h2 class="section-title">📊 Distribuzione Ordini</h2>
   <div class="chart-card">
     <h3>Clienti per numero di ordini effettuati</h3>
     <div class="chart-wrap" style="height:200px;"><canvas id="chartOrdini"></canvas></div>
@@ -256,201 +447,261 @@
 </div><!-- /main-content -->
 
 <script>
-const WORKER_URL = 'https://vk-data-proxy.vibrantkundalini.workers.dev/';
-const PWD_KEY = 'vk_dashboard_pwd';
+const WORKER = 'https://vk-data-proxy.vibrantkundalini.workers.dev/';
+const PWD_KEY = 'vk_pwd';
 
-const fmt  = n => '€' + Number(n).toLocaleString('it-IT', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmt  = n => '€' + Math.round(n).toLocaleString('it-IT');
 const fmtN = n => Number(n).toLocaleString('it-IT');
 
-const C = {
-  reseda:'#6E765B', moss:'#959E79', sage:'#B8B99C',
-  khaki:'#BBA58F', alabaster:'#ECE4D8'
-};
+// ── COUNTER ANIMATION ──
+function animateCount(el, target, prefix = '', duration = 1400) {
+  const start = performance.now();
+  const isFloat = target !== Math.floor(target);
+  const step = ts => {
+    const p = Math.min((ts - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - p, 3);
+    const val = ease * target;
+    el.textContent = prefix + (isFloat ? val.toFixed(2) : Math.round(val).toLocaleString('it-IT'));
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = prefix + (isFloat ? target.toFixed(2) : Math.round(target).toLocaleString('it-IT'));
+  };
+  requestAnimationFrame(step);
+}
 
-// Login
+// ── CHART DEFAULTS ──
+const C = {
+  reseda:'#6E765B', moss:'#959E79', sage:'#B0B494', khaki:'#BBA58F',
+  bg:'#EDE8DF', text:'#3D3D35', muted:'#8A8878', green:'#6A9B6A', red:'#C47272'
+};
+const gridColor = 'rgba(110,118,91,0.12)';
+const tickStyle = { font:{family:'Lato',size:11}, color: C.muted };
+
+// ── LOGIN ──
 function doLogin() {
   const pwd = document.getElementById('pwd-input').value.trim();
   if (!pwd) return;
   loadData(pwd);
 }
 document.getElementById('pwd-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-
-// Se password salvata, prova auto-login
 const saved = sessionStorage.getItem(PWD_KEY);
 if (saved) loadData(saved);
 
 function loadData(pwd) {
-  fetch(WORKER_URL, {
-    headers: { 'x-dashboard-password': pwd }
-  })
-  .then(r => {
-    if (r.status === 401) throw new Error('401');
-    return r.json();
-  })
-  .then(d => {
-    sessionStorage.setItem(PWD_KEY, pwd);
-    document.getElementById('login-overlay').style.display = 'none';
-    document.getElementById('main-content').style.display = 'block';
-    renderDashboard(d);
-  })
-  .catch(err => {
-    if (err.message === '401') {
-      document.getElementById('login-error').style.display = 'block';
-      sessionStorage.removeItem(PWD_KEY);
-    } else {
-      alert('Errore: ' + err.message);
-    }
-  });
+  fetch(WORKER, { headers: { 'x-dashboard-password': pwd } })
+    .then(r => { if(r.status===401) throw new Error('401'); return r.json(); })
+    .then(d => {
+      sessionStorage.setItem(PWD_KEY, pwd);
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+      renderDashboard(d);
+    })
+    .catch(err => {
+      if(err.message==='401') {
+        document.getElementById('login-error').style.display = 'block';
+        sessionStorage.removeItem(PWD_KEY);
+      } else {
+        alert('Errore caricamento dati: ' + err.message);
+      }
+    });
 }
 
 function renderDashboard(d) {
-  document.getElementById('last-updated').textContent = 'Aggiornato: ' + new Date(d.aggiornato).toLocaleString('it-IT');
+  document.getElementById('last-updated').textContent =
+    'Aggiornato: ' + new Date(d.aggiornato).toLocaleString('it-IT');
 
-  // Obiettivo
-  const last = d.fatturato_mensile[d.fatturato_mensile.length-1];
-  const pct = Math.min(100, Math.round((last.fatturato/5000)*100));
-  document.getElementById('goal-fill').style.width = pct+'%';
-  document.getElementById('goal-pct').textContent = fmt(last.fatturato)+' / €5.000 ('+pct+'%)';
+  // ── OBIETTIVO ──
+  const last = d.fatturato_mensile[d.fatturato_mensile.length - 1];
+  const pct = Math.min(100, Math.round((last.fatturato / 5000) * 100));
+  setTimeout(() => { document.getElementById('goal-fill').style.width = pct + '%'; }, 300);
+  document.getElementById('goal-pct').textContent = fmt(last.fatturato) + ' / €5.000 (' + pct + '%)';
   document.getElementById('goal-label').textContent = last.mese;
 
-  // KPI
-  document.getElementById('k-fatturato').textContent = fmt(last.fatturato);
+  // ── KPI con counter animation ──
+  const kpis = [
+    ['k-fatturato', last.fatturato, '€'],
+    ['k-totale',    d.ltv.fatturato_totale, '€'],
+    ['k-attivi',    d.clienti.attivi_12m, ''],
+    ['k-email',     d.flodesk.totale_iscritti, ''],
+    ['k-ltv',       d.ltv.ltv_medio, '€'],
+    ['k-aov',       d.ltv.aov, '€'],
+    ['k-clienti',   d.clienti.totali, ''],
+  ];
+  const mem = d.memberships.per_status.find(s => s.status === 'wcm-active');
+  kpis.push(['k-membership', mem ? mem.n : 0, '']);
   document.getElementById('k-fatturato-mese').textContent = last.mese;
-  document.getElementById('k-totale').textContent = fmt(d.ltv.fatturato_totale);
-  document.getElementById('k-attivi').textContent = fmtN(d.clienti.attivi_12m);
-  const mem = d.memberships.per_status.find(s=>s.status==='wcm-active');
-  document.getElementById('k-membership').textContent = fmtN(mem ? mem.n : 0);
-  document.getElementById('k-email').textContent = fmtN(d.flodesk.totale_iscritti);
-  document.getElementById('k-ltv').textContent = fmt(d.ltv.ltv_medio);
-  document.getElementById('k-aov').textContent = fmt(d.ltv.aov);
-  document.getElementById('k-clienti').textContent = fmtN(d.clienti.totali);
 
-  // Fatturato chart
+  kpis.forEach(([id, val, prefix]) => {
+    const el = document.getElementById(id);
+    animateCount(el, val, prefix);
+  });
+
+  // ── FATTURATO LINE CHART ──
+  const fatLabels = d.fatturato_mensile.map(m => m.mese.replace('20',''));
+  const fatData   = d.fatturato_mensile.map(m => m.fatturato);
+  const maxFat = Math.max(...fatData);
+  const fatColors = fatData.map(v => v === maxFat ? C.reseda : C.moss);
   new Chart(document.getElementById('chartFatturato'), {
-    type:'line',
-    data:{
-      labels: d.fatturato_mensile.map(m=>m.mese.replace('20','')),
-      datasets:[{ label:'Fatturato €', data:d.fatturato_mensile.map(m=>m.fatturato),
-        borderColor:C.reseda, backgroundColor:'rgba(110,118,91,0.08)', fill:true, tension:0.35,
-        pointBackgroundColor:C.reseda, pointRadius:5 }]
+    type: 'line',
+    data: {
+      labels: fatLabels,
+      datasets: [{
+        data: fatData,
+        borderColor: C.reseda,
+        borderWidth: 2.5,
+        backgroundColor: ctx => {
+          const g = ctx.chart.ctx.createLinearGradient(0,0,0,260);
+          g.addColorStop(0,'rgba(110,118,91,0.22)');
+          g.addColorStop(1,'rgba(110,118,91,0)');
+          return g;
+        },
+        fill: true, tension: 0.4,
+        pointBackgroundColor: fatColors,
+        pointRadius: 5, pointHoverRadius: 7,
+      }]
     },
-    options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}} },
-      scales:{
-        x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},
-        y:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>fmt(v)},grid:{color:'#ECE4D8'}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw) } } },
+      scales: {
+        x: { ticks: tickStyle, grid: {color: gridColor} },
+        y: { ticks: {...tickStyle, callback: v => fmt(v)}, grid: {color: gridColor} }
       }
     }
   });
 
-  // Prodotti
+  // ── TOP PRODOTTI ──
+  const prod = d.top_prodotti;
+  const prodColors = [C.reseda, C.moss, C.sage, C.khaki, C.reseda, C.moss, C.sage, C.khaki]
+    .map(c => c + 'CC');
   new Chart(document.getElementById('chartProdotti'), {
-    type:'bar',
-    data:{
-      labels: d.top_prodotti.map(p=>p.prodotto.length>22?p.prodotto.slice(0,22)+'…':p.prodotto),
-      datasets:[{ data:d.top_prodotti.map(p=>p.fatturato),
-        backgroundColor:[C.reseda,C.moss,C.sage,C.khaki,C.reseda,C.moss,C.sage,C.khaki], borderRadius:6 }]
+    type: 'bar',
+    data: {
+      labels: prod.map(p => p.prodotto.length > 24 ? p.prodotto.slice(0,24)+'…' : p.prodotto),
+      datasets: [{ data: prod.map(p => p.fatturato), backgroundColor: prodColors, borderRadius: 8 }]
     },
-    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+    options: {
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
       plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}} },
       scales:{
-        x:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>fmt(v)},grid:{color:'#ECE4D8'}},
-        y:{ticks:{font:{family:'Lato',size:11},color:'#474747'},grid:{display:false}}
+        x:{ticks:{...tickStyle, callback:v=>fmt(v)}, grid:{color:gridColor}},
+        y:{ticks:{font:{family:'Lato',size:10.5},color:C.text}, grid:{display:false}}
       }
     }
   });
 
-  // Budget
+  // ── BUDGET ──
   new Chart(document.getElementById('chartBudget'), {
     type:'bar',
     data:{
       labels: d.budget.netto_mensile.map(m=>m.mese.replace('20','')),
       datasets:[
-        { label:'Entrate', data:d.budget.netto_mensile.map(m=>m.entrate), backgroundColor:'rgba(110,118,91,0.75)', borderRadius:6 },
-        { label:'Uscite',  data:d.budget.netto_mensile.map(m=>m.uscite),  backgroundColor:'rgba(187,165,143,0.75)', borderRadius:6 }
+        {label:'Entrate', data:d.budget.netto_mensile.map(m=>m.entrate), backgroundColor:'rgba(110,118,91,0.65)', borderRadius:8},
+        {label:'Uscite',  data:d.budget.netto_mensile.map(m=>m.uscite),  backgroundColor:'rgba(187,165,143,0.65)', borderRadius:8}
       ]
     },
-    options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{labels:{font:{family:'Lato',size:12},color:'#474747'}}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}} },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{family:'Lato',size:12},color:C.text}}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
       scales:{
-        x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},
-        y:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>fmt(v)},grid:{color:'#ECE4D8'}}
+        x:{ticks:tickStyle, grid:{color:gridColor}},
+        y:{ticks:{...tickStyle, callback:v=>fmt(v)}, grid:{color:gridColor}}
       }
     }
   });
 
-  // Netto table
+  // ── NETTO TABLE ──
   const tbody = document.querySelector('#table-netto tbody');
-  d.budget.netto_mensile.forEach(m=>{
-    const pos = m.netto>=0;
-    tbody.innerHTML += `<tr><td>${m.mese}</td><td>${fmt(m.entrate)}</td><td>${fmt(m.uscite)}</td><td><strong>${fmt(m.netto)}</strong></td><td><span class="badge ${pos?'badge-green':'badge-red'}">${pos?'✓ Positivo':'✗ Negativo'}</span></td></tr>`;
+  d.budget.netto_mensile.forEach(m => {
+    const pos = m.netto >= 0;
+    tbody.innerHTML += `<tr>
+      <td>${m.mese}</td>
+      <td>${fmt(m.entrate)}</td>
+      <td>${fmt(m.uscite)}</td>
+      <td><strong>${fmt(m.netto)}</strong></td>
+      <td><span class="badge ${pos?'badge-green':'badge-red'}">${pos?'✓ Positivo':'✗ Negativo'}</span></td>
+    </tr>`;
   });
 
-  // Ads KPI cards
+  // ── META ADS ──
   const ads = d.meta_ads.totali_30_giorni;
-  [['Spesa','€'+ads.spend],['Impressioni',fmtN(ads.impressions)],['Click',fmtN(ads.clicks)],
-   ['Reach',fmtN(ads.reach)],['CTR',ads.ctr+'%'],['CPC','€'+ads.cpc],['CPM','€'+ads.cpm]
-  ].forEach(([l,v])=>{
-    document.getElementById('ads-grid').innerHTML += `<div class="ads-card"><div class="ads-label">${l}</div><div class="ads-value">${v}</div></div>`;
+  [
+    ['Spesa',      '€'+ads.spend],
+    ['Impressioni', fmtN(ads.impressions)],
+    ['Click',       fmtN(ads.clicks)],
+    ['Reach',       fmtN(ads.reach)],
+    ['CTR',         ads.ctr+'%'],
+    ['CPC',         '€'+ads.cpc],
+    ['CPM',         '€'+ads.cpm],
+  ].forEach(([l,v]) => {
+    document.getElementById('ads-grid').innerHTML +=
+      `<div class="ads-card"><div class="a-label">${l}</div><div class="a-value">${v}</div></div>`;
   });
 
-  // Ads spesa mesi
-  new Chart(document.getElementById('chartAdsSpesa'),{
+  new Chart(document.getElementById('chartAdsSpesa'), {
     type:'bar',
-    data:{ labels:d.meta_ads.mensile.map(m=>m.mese), datasets:[{label:'Spesa €',data:d.meta_ads.mensile.map(m=>m.spend),backgroundColor:C.khaki,borderRadius:6}] },
-    options:{ responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'€'+ctx.raw}}},
-      scales:{x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},y:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>'€'+v},grid:{color:'#ECE4D8'}}}
+    data:{ labels:d.meta_ads.mensile.map(m=>m.mese), datasets:[{data:d.meta_ads.mensile.map(m=>m.spend), backgroundColor:C.khaki+'BB', borderRadius:8}] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>'€'+ctx.raw}}},
+      scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:{...tickStyle,callback:v=>'€'+v},grid:{color:gridColor}}}
     }
   });
 
-  // Ads campagne
   const topC = d.meta_ads.top_campaigns.slice(0,6);
-  new Chart(document.getElementById('chartAdsCampagne'),{
+  new Chart(document.getElementById('chartAdsCampagne'), {
     type:'bar',
-    data:{ labels:topC.map(c=>c.campaign_name.slice(0,28)+'…'), datasets:[{label:'Click',data:topC.map(c=>c.clicks),backgroundColor:C.moss,borderRadius:6}] },
-    options:{ responsive:true,maintainAspectRatio:false,indexAxis:'y',
+    data:{ labels:topC.map(c=>c.campaign_name.slice(0,26)+'…'), datasets:[{data:topC.map(c=>c.clicks), backgroundColor:C.moss+'BB', borderRadius:8}] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
       plugins:{legend:{display:false}},
-      scales:{x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},y:{ticks:{font:{family:'Lato',size:10},color:'#474747'},grid:{display:false}}}
+      scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:{font:{family:'Lato',size:10},color:C.text},grid:{display:false}}}
     }
   });
 
-  // Flodesk donut
+  // ── FLODESK DONUT ──
   const topSeg = d.flodesk.segmenti.slice(0,8);
-  new Chart(document.getElementById('chartFlodesk'),{
+  new Chart(document.getElementById('chartFlodesk'), {
     type:'doughnut',
     data:{
-      labels:topSeg.map(s=>s.nome),
-      datasets:[{data:topSeg.map(s=>s.attivi),
-        backgroundColor:['#6E765B','#959E79','#B8B99C','#BBA58F','#ECE4D8','#4caf50','#81c784','#a5d6a7'],
-        borderWidth:2,borderColor:'#fff'}]
+      labels: topSeg.map(s=>s.nome),
+      datasets:[{ data:topSeg.map(s=>s.attivi),
+        backgroundColor:['#6E765B','#859070','#9AA07C','#B0B494','#BBA58F','#6A9B6A','#8FB08F','#A5C4A5'],
+        borderWidth:3, borderColor:'#EDE8DF'
+      }]
     },
-    options:{ responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'right',labels:{font:{family:'Lato',size:11},color:'#474747',boxWidth:14}}}
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ position:'right', labels:{font:{family:'Lato',size:11},color:C.text,boxWidth:12,padding:10} } }
     }
   });
 
-  // Segmenti lista
-  d.flodesk.segmenti.forEach(s=>{
-    document.getElementById('segmenti-grid').innerHTML += `<div class="segmento-item"><span>${s.nome}</span><span class="seg-count">${fmtN(s.attivi)}</span></div>`;
+  // ── SEGMENTI LISTA ──
+  d.flodesk.segmenti.forEach(s => {
+    document.getElementById('segmenti-grid').innerHTML +=
+      `<div class="seg-item"><span>${s.nome}</span><span class="seg-count">${fmtN(s.attivi)}</span></div>`;
   });
 
-  // Eventi
-  d.eventi_futuri.forEach(ev=>{
-    const dt = new Date(ev.data);
-    const g = dt.getDate();
-    const m = dt.toLocaleString('it-IT',{month:'short'}).toUpperCase();
-    document.getElementById('eventi-list').innerHTML += `<div class="evento-item"><div class="evento-data"><strong>${g}</strong>${m}</div><div class="evento-info"><h4>${ev.titolo}</h4><small>${ev.location||'—'}</small></div><span class="cat-badge">${ev.categoria}</span></div>`;
-  });
+  // ── EVENTI ──
+  const oggi = new Date();
+  d.eventi_futuri
+    .filter(ev => new Date(ev.data) >= oggi)
+    .forEach(ev => {
+      const dt = new Date(ev.data);
+      const g = dt.getDate();
+      const m = dt.toLocaleString('it-IT',{month:'short'}).toUpperCase();
+      document.getElementById('eventi-list').innerHTML +=
+        `<div class="evento-item">
+          <div class="evento-data"><strong>${g}</strong>${m}</div>
+          <div class="evento-info"><h4>${ev.titolo}</h4><small>${ev.location||'—'}</small></div>
+          <span class="cat-badge">${ev.categoria}</span>
+        </div>`;
+    });
 
-  // Distribuzione ordini
+  // ── DISTRIBUZIONE ORDINI ──
   const ord = d.distribuzione_ordini.filter(o=>o.ordini<=10);
-  new Chart(document.getElementById('chartOrdini'),{
+  new Chart(document.getElementById('chartOrdini'), {
     type:'bar',
-    data:{ labels:ord.map(o=>o.ordini+' ord.'), datasets:[{label:'Clienti',data:ord.map(o=>o.clienti),backgroundColor:C.reseda,borderRadius:6}] },
-    options:{ responsive:true,maintainAspectRatio:false,
+    data:{ labels:ord.map(o=>o.ordini+' ord.'), datasets:[{data:ord.map(o=>o.clienti), backgroundColor:C.reseda+'BB', borderRadius:8}] },
+    options:{ responsive:true, maintainAspectRatio:false,
       plugins:{legend:{display:false}},
-      scales:{x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},y:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}}}
+      scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:tickStyle,grid:{color:gridColor}}}
     }
   });
 }
