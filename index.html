@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibrant Kundalini — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --color-reseda:       #6E765B;
+      --color-moss:         #959E79;
+      --color-sage:         #B8B99C;
+      --color-floral-white: #FFFBF4;
+      --color-alabaster:    #ECE4D8;
+      --color-khaki:        #BBA58F;
+      --color-text:         #474747;
+      --color-white:        #FFFFFF;
+      --color-border:       #DDDDDD;
+      --font-serif:   'Playfair Display', Georgia, serif;
+      --font-sans:    'Lato', Arial, sans-serif;
+      --radius-card:   12px;
+      --shadow:        0 2px 12px rgba(110,118,91,0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: linear-gradient(160deg, var(--color-floral-white) 70%, var(--color-alabaster));
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+    header {
+      background: var(--color-reseda);
+      color: var(--color-white);
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 400; letter-spacing: 0.02em; }
+    header .subtitle { font-size: 0.82rem; opacity: 0.75; margin-top: 2px; }
+    #last-updated { font-size: 0.78rem; opacity: 0.7; text-align: right; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 36px 24px 0; }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      color: var(--color-reseda);
+      margin: 36px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .kpi-card {
+      background: var(--color-white);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
+      padding: 20px 22px;
+      border-left: 4px solid var(--color-reseda);
+    }
+    .kpi-card .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-sage); margin-bottom: 6px; }
+    .kpi-card .value { font-family: var(--font-serif); font-size: 2rem; color: var(--color-reseda); line-height: 1; }
+    .kpi-card .sub { font-size: 0.78rem; color: var(--color-khaki); margin-top: 4px; }
+    .kpi-card.accent { border-left-color: var(--color-khaki); }
+    .kpi-card.accent .value { color: var(--color-khaki); }
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .chart-card { background: var(--color-white); border-radius: var(--radius-card); box-shadow: var(--shadow); padding: 22px 24px; }
+    .chart-card h3 { font-family: var(--font-serif); font-size: 1rem; color: var(--color-reseda); margin-bottom: 16px; font-weight: 400; }
+    .chart-wrap { position: relative; height: 260px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { text-align: left; padding: 8px 12px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-sage); border-bottom: 2px solid var(--color-alabaster); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--color-alabaster); color: var(--color-text); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--color-floral-white); }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
+    .badge-green { background: #e8f5e9; color: #388e3c; }
+    .badge-red   { background: #ffebee; color: #c62828; }
+    .ads-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .ads-card { background: var(--color-alabaster); border-radius: 10px; padding: 14px 16px; text-align: center; }
+    .ads-card .ads-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-sage); }
+    .ads-card .ads-value { font-family: var(--font-serif); font-size: 1.6rem; color: var(--color-reseda); margin-top: 4px; }
+    .segmenti-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+    .segmento-item { background: var(--color-alabaster); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+    .segmento-item .seg-count { font-weight: 700; color: var(--color-reseda); font-family: var(--font-serif); font-size: 1.1rem; }
+    .eventi-list { display: flex; flex-direction: column; gap: 10px; }
+    .evento-item { background: var(--color-white); border-radius: 8px; box-shadow: var(--shadow); padding: 14px 18px; display: flex; align-items: center; gap: 16px; }
+    .evento-data { background: var(--color-reseda); color: white; border-radius: 8px; padding: 6px 12px; text-align: center; min-width: 62px; font-size: 0.78rem; line-height: 1.4; }
+    .evento-data strong { display: block; font-size: 1.3rem; }
+    .evento-info h4 { font-size: 0.92rem; margin-bottom: 2px; }
+    .evento-info small { font-size: 0.76rem; color: var(--color-sage); }
+    .cat-badge { margin-left: auto; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; background: var(--color-alabaster); color: var(--color-reseda); }
+    .goal-bar-wrap { background: var(--color-alabaster); border-radius: var(--radius-card); padding: 20px 24px; margin-bottom: 8px; }
+    .goal-bar-label { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 8px; color: var(--color-text); }
+    .goal-bar-track { background: var(--color-border); border-radius: 20px; height: 14px; overflow: hidden; }
+    .goal-bar-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--color-reseda), var(--color-moss)); transition: width 1s ease; }
+    /* Login overlay */
+    #login-overlay {
+      position: fixed; inset: 0;
+      background: linear-gradient(160deg, var(--color-floral-white) 70%, var(--color-alabaster));
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000;
+    }
+    .login-box {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(110,118,91,0.15);
+      padding: 40px 48px;
+      text-align: center;
+      min-width: 320px;
+    }
+    .login-box h2 { font-family: var(--font-serif); color: var(--color-reseda); font-size: 1.6rem; margin-bottom: 6px; }
+    .login-box p { font-size: 0.85rem; color: var(--color-sage); margin-bottom: 24px; }
+    .login-box input {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid var(--color-border);
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: var(--color-text);
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-box input:focus { border-color: var(--color-reseda); }
+    .login-box button {
+      width: 100%; padding: 12px;
+      background: var(--color-reseda);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .login-box button:hover { background: var(--color-moss); }
+    .login-error { color: #c62828; font-size: 0.82rem; margin-top: 10px; display: none; }
+    #main-content { display: none; }
+    @media (max-width: 768px) {
+      header { padding: 18px 20px; }
+      .container { padding: 20px 16px 0; }
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-overlay">
+  <div class="login-box">
+    <h2>Vibrant Kundalini</h2>
+    <p>Inserisci la password per accedere alla dashboard</p>
+    <input type="password" id="pwd-input" placeholder="Password" />
+    <button onclick="doLogin()">Accedi</button>
+    <div class="login-error" id="login-error">Password errata. Riprova.</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="main-content">
+<header>
+  <div>
+    <h1>Vibrant Kundalini</h1>
+    <div class="subtitle">Dashboard — Contadini dell'Anima</div>
+  </div>
+  <div id="last-updated">Caricamento...</div>
+</header>
+
+<div class="container">
+
+  <h2 class="section-title">Obiettivo Mensile</h2>
+  <div class="goal-bar-wrap">
+    <div class="goal-bar-label">
+      <span id="goal-label">—</span>
+      <span id="goal-pct">—</span>
+    </div>
+    <div class="goal-bar-track"><div class="goal-bar-fill" id="goal-fill" style="width:0%"></div></div>
+    <div style="margin-top:8px;font-size:0.78rem;color:var(--color-sage);">Obiettivo: €5.000/mese</div>
+  </div>
+
+  <h2 class="section-title">KPI Principali</h2>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="label">Fatturato Mese Corrente</div><div class="value" id="k-fatturato">—</div><div class="sub" id="k-fatturato-mese"></div></div>
+    <div class="kpi-card accent"><div class="label">Fatturato Totale</div><div class="value" id="k-totale">—</div><div class="sub">dall'inizio</div></div>
+    <div class="kpi-card"><div class="label">Clienti Attivi</div><div class="value" id="k-attivi">—</div><div class="sub">ultimi 12 mesi</div></div>
+    <div class="kpi-card accent"><div class="label">Membership Attive</div><div class="value" id="k-membership">—</div><div class="sub">wcm-active</div></div>
+    <div class="kpi-card"><div class="label">Iscritti Email</div><div class="value" id="k-email">—</div><div class="sub">totale Flodesk</div></div>
+    <div class="kpi-card accent"><div class="label">LTV Medio</div><div class="value" id="k-ltv">—</div><div class="sub">per cliente</div></div>
+    <div class="kpi-card"><div class="label">AOV</div><div class="value" id="k-aov">—</div><div class="sub">valore ordine medio</div></div>
+    <div class="kpi-card accent"><div class="label">Clienti Totali</div><div class="value" id="k-clienti">—</div><div class="sub">da sempre</div></div>
+  </div>
+
+  <h2 class="section-title">Fatturato Mensile</h2>
+  <div class="chart-card">
+    <h3>Andamento fatturato (€) — Apr 2025 → oggi</h3>
+    <div class="chart-wrap"><canvas id="chartFatturato"></canvas></div>
+  </div>
+
+  <h2 class="section-title">Prodotti &amp; Budget</h2>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Top Prodotti — Fatturato (€)</h3>
+      <div class="chart-wrap"><canvas id="chartProdotti"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Budget Mensile — Entrate vs Uscite</h3>
+      <div class="chart-wrap"><canvas id="chartBudget"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Netto Mensile</h2>
+  <div class="chart-card">
+    <table id="table-netto">
+      <thead><tr><th>Mese</th><th>Entrate</th><th>Uscite</th><th>Netto</th><th>Stato</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">Meta Ads — Ultimi 30 Giorni</h2>
+  <div class="ads-grid" id="ads-grid"></div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Spesa Ads per Mese (€)</h3>
+      <div class="chart-wrap"><canvas id="chartAdsSpesa"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Top Campagne — Click</h3>
+      <div class="chart-wrap"><canvas id="chartAdsCampagne"></canvas></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Email — Flodesk</h2>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Top 8 Segmenti</h3>
+      <div class="chart-wrap"><canvas id="chartFlodesk"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Tutti i Segmenti</h3>
+      <div class="segmenti-grid" id="segmenti-grid" style="margin-top:4px;"></div>
+    </div>
+  </div>
+
+  <h2 class="section-title">Prossimi Eventi</h2>
+  <div class="eventi-list" id="eventi-list"></div>
+
+  <h2 class="section-title">Distribuzione Ordini per Cliente</h2>
+  <div class="chart-card">
+    <h3>Clienti per numero di ordini effettuati</h3>
+    <div class="chart-wrap" style="height:200px;"><canvas id="chartOrdini"></canvas></div>
+  </div>
+
+</div>
+</div><!-- /main-content -->
+
+<script>
+const WORKER_URL = 'https://vk-data-proxy.vibrantkundalini.workers.dev/';
+const PWD_KEY = 'vk_dashboard_pwd';
+
+const fmt  = n => '€' + Number(n).toLocaleString('it-IT', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmtN = n => Number(n).toLocaleString('it-IT');
+
+const C = {
+  reseda:'#6E765B', moss:'#959E79', sage:'#B8B99C',
+  khaki:'#BBA58F', alabaster:'#ECE4D8'
+};
+
+// Login
+function doLogin() {
+  const pwd = document.getElementById('pwd-input').value.trim();
+  if (!pwd) return;
+  loadData(pwd);
+}
+document.getElementById('pwd-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// Se password salvata, prova auto-login
+const saved = sessionStorage.getItem(PWD_KEY);
+if (saved) loadData(saved);
+
+function loadData(pwd) {
+  fetch(WORKER_URL, {
+    headers: { 'x-dashboard-password': pwd }
+  })
+  .then(r => {
+    if (r.status === 401) throw new Error('401');
+    return r.json();
+  })
+  .then(d => {
+    sessionStorage.setItem(PWD_KEY, pwd);
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    renderDashboard(d);
+  })
+  .catch(err => {
+    if (err.message === '401') {
+      document.getElementById('login-error').style.display = 'block';
+      sessionStorage.removeItem(PWD_KEY);
+    } else {
+      alert('Errore: ' + err.message);
+    }
+  });
+}
+
+function renderDashboard(d) {
+  document.getElementById('last-updated').textContent = 'Aggiornato: ' + new Date(d.aggiornato).toLocaleString('it-IT');
+
+  // Obiettivo
+  const last = d.fatturato_mensile[d.fatturato_mensile.length-1];
+  const pct = Math.min(100, Math.round((last.fatturato/5000)*100));
+  document.getElementById('goal-fill').style.width = pct+'%';
+  document.getElementById('goal-pct').textContent = fmt(last.fatturato)+' / €5.000 ('+pct+'%)';
+  document.getElementById('goal-label').textContent = last.mese;
+
+  // KPI
+  document.getElementById('k-fatturato').textContent = fmt(last.fatturato);
+  document.getElementById('k-fatturato-mese').textContent = last.mese;
+  document.getElementById('k-totale').textContent = fmt(d.ltv.fatturato_totale);
+  document.getElementById('k-attivi').textContent = fmtN(d.clienti.attivi_12m);
+  const mem = d.memberships.per_status.find(s=>s.status==='wcm-active');
+  document.getElementById('k-membership').textContent = fmtN(mem ? mem.n : 0);
+  document.getElementById('k-email').textContent = fmtN(d.flodesk.totale_iscritti);
+  document.getElementById('k-ltv').textContent = fmt(d.ltv.ltv_medio);
+  document.getElementById('k-aov').textContent = fmt(d.ltv.aov);
+  document.getElementById('k-clienti').textContent = fmtN(d.clienti.totali);
+
+  // Fatturato chart
+  new Chart(document.getElementById('chartFatturato'), {
+    type:'line',
+    data:{
+      labels: d.fatturato_mensile.map(m=>m.mese.replace('20','')),
+      datasets:[{ label:'Fatturato €', data:d.fatturato_mensile.map(m=>m.fatturato),
+        borderColor:C.reseda, backgroundColor:'rgba(110,118,91,0.08)', fill:true, tension:0.35,
+        pointBackgroundColor:C.reseda, pointRadius:5 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}} },
+      scales:{
+        x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},
+        y:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>fmt(v)},grid:{color:'#ECE4D8'}}
+      }
+    }
+  });
+
+  // Prodotti
+  new Chart(document.getElementById('chartProdotti'), {
+    type:'bar',
+    data:{
+      labels: d.top_prodotti.map(p=>p.prodotto.length>22?p.prodotto.slice(0,22)+'…':p.prodotto),
+      datasets:[{ data:d.top_prodotti.map(p=>p.fatturato),
+        backgroundColor:[C.reseda,C.moss,C.sage,C.khaki,C.reseda,C.moss,C.sage,C.khaki], borderRadius:6 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}} },
+      scales:{
+        x:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>fmt(v)},grid:{color:'#ECE4D8'}},
+        y:{ticks:{font:{family:'Lato',size:11},color:'#474747'},grid:{display:false}}
+      }
+    }
+  });
+
+  // Budget
+  new Chart(document.getElementById('chartBudget'), {
+    type:'bar',
+    data:{
+      labels: d.budget.netto_mensile.map(m=>m.mese.replace('20','')),
+      datasets:[
+        { label:'Entrate', data:d.budget.netto_mensile.map(m=>m.entrate), backgroundColor:'rgba(110,118,91,0.75)', borderRadius:6 },
+        { label:'Uscite',  data:d.budget.netto_mensile.map(m=>m.uscite),  backgroundColor:'rgba(187,165,143,0.75)', borderRadius:6 }
+      ]
+    },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{font:{family:'Lato',size:12},color:'#474747'}}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}} },
+      scales:{
+        x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},
+        y:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>fmt(v)},grid:{color:'#ECE4D8'}}
+      }
+    }
+  });
+
+  // Netto table
+  const tbody = document.querySelector('#table-netto tbody');
+  d.budget.netto_mensile.forEach(m=>{
+    const pos = m.netto>=0;
+    tbody.innerHTML += `<tr><td>${m.mese}</td><td>${fmt(m.entrate)}</td><td>${fmt(m.uscite)}</td><td><strong>${fmt(m.netto)}</strong></td><td><span class="badge ${pos?'badge-green':'badge-red'}">${pos?'✓ Positivo':'✗ Negativo'}</span></td></tr>`;
+  });
+
+  // Ads KPI cards
+  const ads = d.meta_ads.totali_30_giorni;
+  [['Spesa','€'+ads.spend],['Impressioni',fmtN(ads.impressions)],['Click',fmtN(ads.clicks)],
+   ['Reach',fmtN(ads.reach)],['CTR',ads.ctr+'%'],['CPC','€'+ads.cpc],['CPM','€'+ads.cpm]
+  ].forEach(([l,v])=>{
+    document.getElementById('ads-grid').innerHTML += `<div class="ads-card"><div class="ads-label">${l}</div><div class="ads-value">${v}</div></div>`;
+  });
+
+  // Ads spesa mesi
+  new Chart(document.getElementById('chartAdsSpesa'),{
+    type:'bar',
+    data:{ labels:d.meta_ads.mensile.map(m=>m.mese), datasets:[{label:'Spesa €',data:d.meta_ads.mensile.map(m=>m.spend),backgroundColor:C.khaki,borderRadius:6}] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'€'+ctx.raw}}},
+      scales:{x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},y:{ticks:{font:{family:'Lato',size:11},color:'#959E79',callback:v=>'€'+v},grid:{color:'#ECE4D8'}}}
+    }
+  });
+
+  // Ads campagne
+  const topC = d.meta_ads.top_campaigns.slice(0,6);
+  new Chart(document.getElementById('chartAdsCampagne'),{
+    type:'bar',
+    data:{ labels:topC.map(c=>c.campaign_name.slice(0,28)+'…'), datasets:[{label:'Click',data:topC.map(c=>c.clicks),backgroundColor:C.moss,borderRadius:6}] },
+    options:{ responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},y:{ticks:{font:{family:'Lato',size:10},color:'#474747'},grid:{display:false}}}
+    }
+  });
+
+  // Flodesk donut
+  const topSeg = d.flodesk.segmenti.slice(0,8);
+  new Chart(document.getElementById('chartFlodesk'),{
+    type:'doughnut',
+    data:{
+      labels:topSeg.map(s=>s.nome),
+      datasets:[{data:topSeg.map(s=>s.attivi),
+        backgroundColor:['#6E765B','#959E79','#B8B99C','#BBA58F','#ECE4D8','#4caf50','#81c784','#a5d6a7'],
+        borderWidth:2,borderColor:'#fff'}]
+    },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{font:{family:'Lato',size:11},color:'#474747',boxWidth:14}}}
+    }
+  });
+
+  // Segmenti lista
+  d.flodesk.segmenti.forEach(s=>{
+    document.getElementById('segmenti-grid').innerHTML += `<div class="segmento-item"><span>${s.nome}</span><span class="seg-count">${fmtN(s.attivi)}</span></div>`;
+  });
+
+  // Eventi
+  d.eventi_futuri.forEach(ev=>{
+    const dt = new Date(ev.data);
+    const g = dt.getDate();
+    const m = dt.toLocaleString('it-IT',{month:'short'}).toUpperCase();
+    document.getElementById('eventi-list').innerHTML += `<div class="evento-item"><div class="evento-data"><strong>${g}</strong>${m}</div><div class="evento-info"><h4>${ev.titolo}</h4><small>${ev.location||'—'}</small></div><span class="cat-badge">${ev.categoria}</span></div>`;
+  });
+
+  // Distribuzione ordini
+  const ord = d.distribuzione_ordini.filter(o=>o.ordini<=10);
+  new Chart(document.getElementById('chartOrdini'),{
+    type:'bar',
+    data:{ labels:ord.map(o=>o.ordini+' ord.'), datasets:[{label:'Clienti',data:ord.map(o=>o.clienti),backgroundColor:C.reseda,borderRadius:6}] },
+    options:{ responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}},y:{ticks:{font:{family:'Lato',size:11},color:'#959E79'},grid:{color:'#ECE4D8'}}}
+    }
+  });
+}
+</script>
+</body>
+</html>
