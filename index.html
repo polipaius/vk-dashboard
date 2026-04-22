@@ -42,12 +42,10 @@
       padding-bottom: 80px;
     }
 
-    /* ── SCROLLBAR ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--sage); border-radius: 10px; }
 
-    /* ── LOGIN ── */
     #login-overlay {
       position: fixed; inset: 0;
       background: var(--bg);
@@ -113,7 +111,6 @@
     .login-box button:active { box-shadow: var(--neu-in); }
     .login-error { color: var(--red); font-size: 0.82rem; margin-top: 12px; display: none; }
 
-    /* ── HEADER ── */
     #main-content { display: none; }
     header {
       background: linear-gradient(135deg, #5E6649 0%, #7A8462 60%, #9AA07C 100%);
@@ -139,7 +136,6 @@
     header .subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-top: 2px; }
     #last-updated { font-size: 0.76rem; color: rgba(255,255,255,0.55); text-align: right; }
 
-    /* ── CONTAINER ── */
     .container { max-width: 1240px; margin: 0 auto; padding: 44px 28px 0; }
 
     .section-title {
@@ -156,7 +152,6 @@
       background: linear-gradient(90deg, var(--sage), transparent);
     }
 
-    /* ── GOAL BAR ── */
     .goal-wrap {
       background: var(--bg);
       border-radius: var(--radius);
@@ -180,7 +175,6 @@
     }
     .goal-sub { margin-top: 10px; font-size: 0.76rem; color: var(--text-muted); }
 
-    /* ── KPI CARDS ── */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -216,7 +210,6 @@
     .kpi-card.accent .k-value { color: var(--khaki); }
     .kpi-card .k-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
 
-    /* ── CHART CARDS ── */
     .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
     .chart-card {
       background: var(--bg);
@@ -234,7 +227,6 @@
     }
     .chart-wrap { position: relative; height: 270px; }
 
-    /* ── TABLE ── */
     table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
     th {
       text-align: left; padding: 10px 14px;
@@ -252,8 +244,8 @@
     }
     .badge-green { background: rgba(106,155,106,0.15); color: var(--green); }
     .badge-red   { background: rgba(196,114,114,0.15); color: var(--red); }
+    .badge-blue  { background: rgba(110,118,91,0.12); color: var(--reseda); }
 
-    /* ── ADS ── */
     .ads-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px,1fr)); gap: 14px; margin-bottom: 22px; }
     .ads-card {
       background: var(--bg);
@@ -265,8 +257,8 @@
     .ads-card:hover { transform: translateY(-2px); }
     .ads-card .a-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-muted); }
     .ads-card .a-value { font-family: var(--font-serif); font-size: 1.65rem; color: var(--reseda); margin-top: 6px; }
+    .ads-card.accent .a-value { color: var(--khaki); }
 
-    /* ── SEGMENTI ── */
     .segmenti-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
     .seg-item {
       background: var(--bg);
@@ -278,7 +270,6 @@
     }
     .seg-count { font-family: var(--font-serif); font-size: 1.1rem; color: var(--reseda); font-weight: 700; }
 
-    /* ── EVENTI ── */
     .eventi-list { display: flex; flex-direction: column; gap: 12px; }
     .evento-item {
       background: var(--bg);
@@ -310,8 +301,7 @@
       color: var(--reseda);
     }
 
-    /* ── COUNTER ANIMATION ── */
-    .counting { transition: none; }
+    .table-scroll { overflow-x: auto; }
 
     @media (max-width: 768px) {
       header { padding: 20px 22px; }
@@ -324,7 +314,6 @@
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-overlay">
   <div class="login-box">
     <div class="login-logo">✿</div>
@@ -336,7 +325,6 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="main-content">
 
 <header>
@@ -344,7 +332,7 @@
     <div class="header-icon">✿</div>
     <div>
       <h1>Vibrant Kundalini</h1>
-      <div class="subtitle">Contadini dell’Anima — Dashboard</div>
+      <div class="subtitle">Contadini dell'Anima — Dashboard</div>
     </div>
   </div>
   <div id="last-updated">Caricamento…</div>
@@ -352,7 +340,6 @@
 
 <div class="container">
 
-  <!-- OBIETTIVO -->
   <h2 class="section-title">🎯 Obiettivo Mensile</h2>
   <div class="goal-wrap">
     <div class="goal-header">
@@ -363,11 +350,10 @@
     <div class="goal-sub">Obiettivo: €5.000 / mese</div>
   </div>
 
-  <!-- KPI -->
   <h2 class="section-title">✨ KPI Principali</h2>
   <div class="kpi-grid">
     <div class="kpi-card"><div class="k-label">Fatturato Mese</div><div class="k-value" id="k-fatturato" data-val="0" data-prefix="€">—</div><div class="k-sub" id="k-fatturato-mese"></div></div>
-    <div class="kpi-card accent"><div class="k-label">Fatturato Totale</div><div class="k-value" id="k-totale" data-val="0" data-prefix="€">—</div><div class="k-sub">dall’inizio</div></div>
+    <div class="kpi-card accent"><div class="k-label">Fatturato Totale</div><div class="k-value" id="k-totale" data-val="0" data-prefix="€">—</div><div class="k-sub">dall'inizio</div></div>
     <div class="kpi-card"><div class="k-label">Clienti Attivi</div><div class="k-value" id="k-attivi" data-val="0">—</div><div class="k-sub">ultimi 12 mesi</div></div>
     <div class="kpi-card accent"><div class="k-label">Membership Attive</div><div class="k-value" id="k-membership" data-val="0">—</div><div class="k-sub">wcm-active</div></div>
     <div class="kpi-card"><div class="k-label">Iscritti Email</div><div class="k-value" id="k-email" data-val="0">—</div><div class="k-sub">totale Flodesk</div></div>
@@ -376,14 +362,12 @@
     <div class="kpi-card accent"><div class="k-label">Clienti Totali</div><div class="k-value" id="k-clienti" data-val="0">—</div><div class="k-sub">da sempre</div></div>
   </div>
 
-  <!-- FATTURATO -->
   <h2 class="section-title">📈 Fatturato Mensile</h2>
   <div class="chart-card">
     <h3>Andamento (€) — Apr 2025 → oggi</h3>
     <div class="chart-wrap"><canvas id="chartFatturato"></canvas></div>
   </div>
 
-  <!-- PRODOTTI + BUDGET -->
   <h2 class="section-title">📦 Prodotti &amp; Budget</h2>
   <div class="charts-grid">
     <div class="chart-card">
@@ -396,7 +380,6 @@
     </div>
   </div>
 
-  <!-- NETTO TABLE -->
   <h2 class="section-title">💳 Netto Mensile</h2>
   <div class="chart-card">
     <table id="table-netto">
@@ -406,16 +389,47 @@
   </div>
 
   <!-- META ADS -->
-  <h2 class="section-title">🎯 Meta Ads — Ultimi 30 Giorni</h2>
-  <div class="ads-grid" id="ads-grid"></div>
-  <div class="charts-grid">
+  <h2 class="section-title">📣 Meta Ads</h2>
+
+  <!-- KPI 90gg -->
+  <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:12px;">Ultimi 90 giorni</div>
+  <div class="ads-grid" id="ads-grid-90"></div>
+
+  <!-- KPI 30gg -->
+  <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin:20px 0 12px;">Ultimi 30 giorni</div>
+  <div class="ads-grid" id="ads-grid-30"></div>
+
+  <!-- Grafici -->
+  <div class="charts-grid" style="margin-top:22px;">
     <div class="chart-card">
-      <h3>Spesa per Mese (€)</h3>
+      <h3>Spesa Mensile (€) — 90 giorni</h3>
       <div class="chart-wrap"><canvas id="chartAdsSpesa"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>Top Campagne — Click</h3>
-      <div class="chart-wrap"><canvas id="chartAdsCampagne"></canvas></div>
+      <h3>ROAS per Mese — 90 giorni</h3>
+      <div class="chart-wrap"><canvas id="chartAdsRoas"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Campagne attive -->
+  <div class="chart-card" style="margin-top:22px;">
+    <h3>🟢 Campagne Attive</h3>
+    <div class="table-scroll">
+      <table id="table-campagne-attive">
+        <thead><tr><th>Campagna</th><th>Obiettivo</th><th>Budget/giorno</th><th>Budget lifetime</th><th>Inizio</th><th>Fine</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Top campagne 90gg -->
+  <div class="chart-card" style="margin-top:22px;">
+    <h3>Top Campagne — Ultimi 90 Giorni</h3>
+    <div class="table-scroll">
+      <table id="table-campagne-90">
+        <thead><tr><th>Campagna</th><th>Spend</th><th>Acquisti</th><th>Valore acquisti</th><th>ROAS</th><th>CPA</th><th>CTR</th><th>Click</th></tr></thead>
+        <tbody></tbody>
+      </table>
     </div>
   </div>
 
@@ -432,11 +446,9 @@
     </div>
   </div>
 
-  <!-- EVENTI -->
   <h2 class="section-title">📅 Prossimi Eventi</h2>
   <div class="eventi-list" id="eventi-list"></div>
 
-  <!-- DISTRIBUZIONE ORDINI -->
   <h2 class="section-title">📊 Distribuzione Ordini</h2>
   <div class="chart-card">
     <h3>Clienti per numero di ordini effettuati</h3>
@@ -444,7 +456,7 @@
   </div>
 
 </div>
-</div><!-- /main-content -->
+</div>
 
 <script>
 const WORKER = 'https://vk-data-proxy.vibrantkundalini.workers.dev/';
@@ -452,8 +464,8 @@ const PWD_KEY = 'vk_pwd';
 
 const fmt  = n => '€' + Math.round(n).toLocaleString('it-IT');
 const fmtN = n => Number(n).toLocaleString('it-IT');
+const fmtD = s => s ? s.slice(0,7) : '—';
 
-// ── COUNTER ANIMATION ──
 function animateCount(el, target, prefix = '', duration = 1400) {
   const start = performance.now();
   const isFloat = target !== Math.floor(target);
@@ -468,7 +480,6 @@ function animateCount(el, target, prefix = '', duration = 1400) {
   requestAnimationFrame(step);
 }
 
-// ── CHART DEFAULTS ──
 const C = {
   reseda:'#6E765B', moss:'#959E79', sage:'#B0B494', khaki:'#BBA58F',
   bg:'#EDE8DF', text:'#3D3D35', muted:'#8A8878', green:'#6A9B6A', red:'#C47272'
@@ -476,7 +487,6 @@ const C = {
 const gridColor = 'rgba(110,118,91,0.12)';
 const tickStyle = { font:{family:'Lato',size:11}, color: C.muted };
 
-// ── LOGIN ──
 function doLogin() {
   const pwd = document.getElementById('pwd-input').value.trim();
   if (!pwd) return;
@@ -509,14 +519,12 @@ function renderDashboard(d) {
   document.getElementById('last-updated').textContent =
     'Aggiornato: ' + new Date(d.aggiornato).toLocaleString('it-IT');
 
-  // ── OBIETTIVO ──
   const last = d.fatturato_mensile[d.fatturato_mensile.length - 1];
   const pct = Math.min(100, Math.round((last.fatturato / 5000) * 100));
   setTimeout(() => { document.getElementById('goal-fill').style.width = pct + '%'; }, 300);
   document.getElementById('goal-pct').textContent = fmt(last.fatturato) + ' / €5.000 (' + pct + '%)';
   document.getElementById('goal-label').textContent = last.mese;
 
-  // ── KPI con counter animation ──
   const kpis = [
     ['k-fatturato', last.fatturato, '€'],
     ['k-totale',    d.ltv.fatturato_totale, '€'],
@@ -529,13 +537,9 @@ function renderDashboard(d) {
   const mem = d.memberships.per_status.find(s => s.status === 'wcm-active');
   kpis.push(['k-membership', mem ? mem.n : 0, '']);
   document.getElementById('k-fatturato-mese').textContent = last.mese;
+  kpis.forEach(([id, val, prefix]) => animateCount(document.getElementById(id), val, prefix));
 
-  kpis.forEach(([id, val, prefix]) => {
-    const el = document.getElementById(id);
-    animateCount(el, val, prefix);
-  });
-
-  // ── FATTURATO LINE CHART ──
+  // ── FATTURATO ──
   const fatLabels = d.fatturato_mensile.map(m => m.mese.replace('20',''));
   const fatData   = d.fatturato_mensile.map(m => m.fatturato);
   const maxFat = Math.max(...fatData);
@@ -546,8 +550,7 @@ function renderDashboard(d) {
       labels: fatLabels,
       datasets: [{
         data: fatData,
-        borderColor: C.reseda,
-        borderWidth: 2.5,
+        borderColor: C.reseda, borderWidth: 2.5,
         backgroundColor: ctx => {
           const g = ctx.chart.ctx.createLinearGradient(0,0,0,260);
           g.addColorStop(0,'rgba(110,118,91,0.22)');
@@ -555,37 +558,28 @@ function renderDashboard(d) {
           return g;
         },
         fill: true, tension: 0.4,
-        pointBackgroundColor: fatColors,
-        pointRadius: 5, pointHoverRadius: 7,
+        pointBackgroundColor: fatColors, pointRadius: 5, pointHoverRadius: 7,
       }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend:{display:false}, tooltip:{ callbacks:{ label: ctx => fmt(ctx.raw) } } },
-      scales: {
-        x: { ticks: tickStyle, grid: {color: gridColor} },
-        y: { ticks: {...tickStyle, callback: v => fmt(v)}, grid: {color: gridColor} }
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
+      scales:{
+        x:{ticks:tickStyle,grid:{color:gridColor}},
+        y:{ticks:{...tickStyle,callback:v=>fmt(v)},grid:{color:gridColor}}
       }
     }
   });
 
-  // ── TOP PRODOTTI ──
+  // ── PRODOTTI ──
   const prod = d.top_prodotti;
-  const prodColors = [C.reseda, C.moss, C.sage, C.khaki, C.reseda, C.moss, C.sage, C.khaki]
-    .map(c => c + 'CC');
+  const prodColors = [C.reseda,C.moss,C.sage,C.khaki,C.reseda,C.moss,C.sage,C.khaki].map(c=>c+'CC');
   new Chart(document.getElementById('chartProdotti'), {
-    type: 'bar',
-    data: {
-      labels: prod.map(p => p.prodotto.length > 24 ? p.prodotto.slice(0,24)+'…' : p.prodotto),
-      datasets: [{ data: prod.map(p => p.fatturato), backgroundColor: prodColors, borderRadius: 8 }]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false, indexAxis:'y',
-      plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}} },
-      scales:{
-        x:{ticks:{...tickStyle, callback:v=>fmt(v)}, grid:{color:gridColor}},
-        y:{ticks:{font:{family:'Lato',size:10.5},color:C.text}, grid:{display:false}}
-      }
+    type:'bar',
+    data:{ labels:prod.map(p=>p.prodotto.length>24?p.prodotto.slice(0,24)+'…':p.prodotto), datasets:[{data:prod.map(p=>p.fatturato),backgroundColor:prodColors,borderRadius:8}] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
+      scales:{x:{ticks:{...tickStyle,callback:v=>fmt(v)},grid:{color:gridColor}},y:{ticks:{font:{family:'Lato',size:10.5},color:C.text},grid:{display:false}}}
     }
   });
 
@@ -593,19 +587,15 @@ function renderDashboard(d) {
   new Chart(document.getElementById('chartBudget'), {
     type:'bar',
     data:{
-      labels: d.budget.netto_mensile.map(m=>m.mese.replace('20','')),
+      labels:d.budget.netto_mensile.map(m=>m.mese.replace('20','')),
       datasets:[
-        {label:'Entrate', data:d.budget.netto_mensile.map(m=>m.entrate), backgroundColor:'rgba(110,118,91,0.65)', borderRadius:8},
-        {label:'Uscite',  data:d.budget.netto_mensile.map(m=>m.uscite),  backgroundColor:'rgba(187,165,143,0.65)', borderRadius:8}
+        {label:'Entrate',data:d.budget.netto_mensile.map(m=>m.entrate),backgroundColor:'rgba(110,118,91,0.65)',borderRadius:8},
+        {label:'Uscite', data:d.budget.netto_mensile.map(m=>m.uscite), backgroundColor:'rgba(187,165,143,0.65)',borderRadius:8}
       ]
     },
-    options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{labels:{font:{family:'Lato',size:12},color:C.text}}, tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
-      scales:{
-        x:{ticks:tickStyle, grid:{color:gridColor}},
-        y:{ticks:{...tickStyle, callback:v=>fmt(v)}, grid:{color:gridColor}}
-      }
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{font:{family:'Lato',size:12},color:C.text}},tooltip:{callbacks:{label:ctx=>fmt(ctx.raw)}}},
+      scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:{...tickStyle,callback:v=>fmt(v)},grid:{color:gridColor}}}
     }
   });
 
@@ -614,65 +604,118 @@ function renderDashboard(d) {
   d.budget.netto_mensile.forEach(m => {
     const pos = m.netto >= 0;
     tbody.innerHTML += `<tr>
-      <td>${m.mese}</td>
-      <td>${fmt(m.entrate)}</td>
-      <td>${fmt(m.uscite)}</td>
+      <td>${m.mese}</td><td>${fmt(m.entrate)}</td><td>${fmt(m.uscite)}</td>
       <td><strong>${fmt(m.netto)}</strong></td>
       <td><span class="badge ${pos?'badge-green':'badge-red'}">${pos?'✓ Positivo':'✗ Negativo'}</span></td>
     </tr>`;
   });
 
   // ── META ADS ──
-  const ads = d.meta_ads.totali_30_giorni;
+  const ma = d.meta_ads;
+  const t90 = ma.totali_90_giorni || {};
+  const t30 = ma.totali_30_giorni || {};
+
+  // KPI 90gg
   [
-    ['Spesa',      '€'+ads.spend],
-    ['Impressioni', fmtN(ads.impressions)],
-    ['Click',       fmtN(ads.clicks)],
-    ['Reach',       fmtN(ads.reach)],
-    ['CTR',         ads.ctr+'%'],
-    ['CPC',         '€'+ads.cpc],
-    ['CPM',         '€'+ads.cpm],
+    ['Spend 90gg',    '€'+(t90.spend||0), false],
+    ['Acquisti 90gg', t90.purchases||0,   false],
+    ['ROAS',          t90.roas||0,        true],
+    ['CPA',           '€'+(t90.cpa||0),  true],
+    ['Impression',    fmtN(t90.impressions||0), false],
+    ['Click',         fmtN(t90.clicks||0),      false],
+  ].forEach(([l,v,accent]) => {
+    document.getElementById('ads-grid-90').innerHTML +=
+      `<div class="ads-card${accent?' accent':''}"><div class="a-label">${l}</div><div class="a-value">${v}</div></div>`;
+  });
+
+  // KPI 30gg
+  [
+    ['Spend 30gg', '€'+(t30.spend||0)],
+    ['CTR',        (t30.ctr||0)+'%'],
+    ['CPC',        '€'+(t30.cpc||0)],
+    ['CPM',        '€'+(t30.cpm||0)],
+    ['Reach',      fmtN(t30.reach||0)],
+    ['ROAS 30gg',  t30.roas||0],
   ].forEach(([l,v]) => {
-    document.getElementById('ads-grid').innerHTML +=
+    document.getElementById('ads-grid-30').innerHTML +=
       `<div class="ads-card"><div class="a-label">${l}</div><div class="a-value">${v}</div></div>`;
   });
 
+  // Grafico spesa mensile 90gg
+  const m90 = ma.mensile_90 || ma.mensile || [];
   new Chart(document.getElementById('chartAdsSpesa'), {
     type:'bar',
-    data:{ labels:d.meta_ads.mensile.map(m=>m.mese), datasets:[{data:d.meta_ads.mensile.map(m=>m.spend), backgroundColor:C.khaki+'BB', borderRadius:8}] },
+    data:{ labels:m90.map(m=>m.mese), datasets:[{data:m90.map(m=>m.spend),backgroundColor:C.khaki+'BB',borderRadius:8}] },
     options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>'€'+ctx.raw}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'€'+ctx.raw}}},
       scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:{...tickStyle,callback:v=>'€'+v},grid:{color:gridColor}}}
     }
   });
 
-  const topC = d.meta_ads.top_campaigns.slice(0,6);
-  new Chart(document.getElementById('chartAdsCampagne'), {
-    type:'bar',
-    data:{ labels:topC.map(c=>c.campaign_name.slice(0,26)+'…'), datasets:[{data:topC.map(c=>c.clicks), backgroundColor:C.moss+'BB', borderRadius:8}] },
-    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
-      plugins:{legend:{display:false}},
-      scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:{font:{family:'Lato',size:10},color:C.text},grid:{display:false}}}
+  // Grafico ROAS mensile 90gg
+  new Chart(document.getElementById('chartAdsRoas'), {
+    type:'line',
+    data:{ labels:m90.map(m=>m.mese), datasets:[{
+      data:m90.map(m=>m.roas||0),
+      borderColor:C.reseda, borderWidth:2.5,
+      backgroundColor:'rgba(110,118,91,0.1)',
+      fill:true, tension:0.4,
+      pointBackgroundColor:C.reseda, pointRadius:5, pointHoverRadius:7
+    }]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'ROAS: '+ctx.raw}}},
+      scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:tickStyle,grid:{color:gridColor},min:0}}
     }
   });
 
-  // ── FLODESK DONUT ──
+  // Tabella campagne attive
+  const tbAtt = document.querySelector('#table-campagne-attive tbody');
+  (ma.campagne_attive||[]).forEach(c => {
+    tbAtt.innerHTML += `<tr>
+      <td><strong>${c.nome}</strong></td>
+      <td><span class="badge badge-blue">${c.obiettivo||'—'}</span></td>
+      <td>${c.budget_giornaliero ? '€'+c.budget_giornaliero : '—'}</td>
+      <td>${c.budget_lifetime   ? '€'+c.budget_lifetime   : '—'}</td>
+      <td>${c.inizio||'—'}</td>
+      <td>${c.fine||'∞'}</td>
+    </tr>`;
+  });
+  if (!(ma.campagne_attive||[]).length) {
+    tbAtt.innerHTML = '<tr><td colspan="6" style="color:var(--text-muted);text-align:center;">Nessuna campagna attiva</td></tr>';
+  }
+
+  // Tabella top campagne 90gg
+  const tb90 = document.querySelector('#table-campagne-90 tbody');
+  (ma.top_campaigns_90 || ma.top_campaigns || []).forEach(c => {
+    const roasColor = c.roas >= 2 ? 'color:var(--green);font-weight:700;' : c.roas > 0 ? '' : 'color:var(--red);';
+    tb90.innerHTML += `<tr>
+      <td>${c.campaign_name.length>32?c.campaign_name.slice(0,32)+'…':c.campaign_name}</td>
+      <td>€${c.spend}</td>
+      <td>${c.purchases||0}</td>
+      <td>${c.purchase_value ? '€'+c.purchase_value : '—'}</td>
+      <td style="${roasColor}">${c.roas||'—'}</td>
+      <td>${c.cpa ? '€'+c.cpa : '—'}</td>
+      <td>${c.ctr||0}%</td>
+      <td>${fmtN(c.clicks||0)}</td>
+    </tr>`;
+  });
+
+  // ── FLODESK ──
   const topSeg = d.flodesk.segmenti.slice(0,8);
   new Chart(document.getElementById('chartFlodesk'), {
     type:'doughnut',
     data:{
-      labels: topSeg.map(s=>s.nome),
-      datasets:[{ data:topSeg.map(s=>s.attivi),
+      labels:topSeg.map(s=>s.nome),
+      datasets:[{data:topSeg.map(s=>s.attivi),
         backgroundColor:['#6E765B','#859070','#9AA07C','#B0B494','#BBA58F','#6A9B6A','#8FB08F','#A5C4A5'],
-        borderWidth:3, borderColor:'#EDE8DF'
+        borderWidth:3,borderColor:'#EDE8DF'
       }]
     },
     options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ position:'right', labels:{font:{family:'Lato',size:11},color:C.text,boxWidth:12,padding:10} } }
+      plugins:{legend:{position:'right',labels:{font:{family:'Lato',size:11},color:C.text,boxWidth:12,padding:10}}}
     }
   });
 
-  // ── SEGMENTI LISTA ──
   d.flodesk.segmenti.forEach(s => {
     document.getElementById('segmenti-grid').innerHTML +=
       `<div class="seg-item"><span>${s.nome}</span><span class="seg-count">${fmtN(s.attivi)}</span></div>`;
@@ -680,25 +723,23 @@ function renderDashboard(d) {
 
   // ── EVENTI ──
   const oggi = new Date();
-  d.eventi_futuri
-    .filter(ev => new Date(ev.data) >= oggi)
-    .forEach(ev => {
-      const dt = new Date(ev.data);
-      const g = dt.getDate();
-      const m = dt.toLocaleString('it-IT',{month:'short'}).toUpperCase();
-      document.getElementById('eventi-list').innerHTML +=
-        `<div class="evento-item">
-          <div class="evento-data"><strong>${g}</strong>${m}</div>
-          <div class="evento-info"><h4>${ev.titolo}</h4><small>${ev.location||'—'}</small></div>
-          <span class="cat-badge">${ev.categoria}</span>
-        </div>`;
-    });
+  d.eventi_futuri.filter(ev=>new Date(ev.data)>=oggi).forEach(ev => {
+    const dt=new Date(ev.data);
+    const g=dt.getDate();
+    const m=dt.toLocaleString('it-IT',{month:'short'}).toUpperCase();
+    document.getElementById('eventi-list').innerHTML +=
+      `<div class="evento-item">
+        <div class="evento-data"><strong>${g}</strong>${m}</div>
+        <div class="evento-info"><h4>${ev.titolo}</h4><small>${ev.location||'—'}</small></div>
+        <span class="cat-badge">${ev.categoria}</span>
+      </div>`;
+  });
 
   // ── DISTRIBUZIONE ORDINI ──
   const ord = d.distribuzione_ordini.filter(o=>o.ordini<=10);
   new Chart(document.getElementById('chartOrdini'), {
     type:'bar',
-    data:{ labels:ord.map(o=>o.ordini+' ord.'), datasets:[{data:ord.map(o=>o.clienti), backgroundColor:C.reseda+'BB', borderRadius:8}] },
+    data:{labels:ord.map(o=>o.ordini+' ord.'),datasets:[{data:ord.map(o=>o.clienti),backgroundColor:C.reseda+'BB',borderRadius:8}]},
     options:{ responsive:true, maintainAspectRatio:false,
       plugins:{legend:{display:false}},
       scales:{x:{ticks:tickStyle,grid:{color:gridColor}},y:{ticks:tickStyle,grid:{color:gridColor}}}
